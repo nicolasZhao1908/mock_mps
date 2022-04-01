@@ -1,63 +1,41 @@
 package org.mps.mock.exercises;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 public class MockingExamplesTest {
+    /**
+     * Components
+     * Una box puede tener varios components.
+     * Una box puede insertar o quitar components.
+     * Los boxes insertados o quitados pueden no tener boxes o items.
+     * Se puede obtener el valor del item o modificarlo.
+     */
 
-    private class Buffer {
-        List<Box> boxes;
-        int totalSize;
-
-        Buffer(){
-            boxes = new ArrayList<>();
-            totalSize = 0;
-        }
-        void insertBox(Box box){
-            boxes.add(box);
-            totalSize++;
-        }
-        void removeBox(Box box){
-            boxes.remove(box);
-            totalSize--;
-        }
-        int getTotalSize(){
-            return totalSize;
-        }
-        Enumeration<Box> getBoxes(){
-            return java.util.Collections.enumeration(boxes);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Buffer buffer = (Buffer) o;
-
-            if (totalSize != buffer.totalSize) return false;
-            return boxes != null ? boxes.equals(buffer.boxes) : buffer.boxes == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = boxes != null ? boxes.hashCode() : 0;
-            result = 31 * result + totalSize;
-            return result;
-        }
+    private interface Component {
+        void moveTo(Box destination);
     }
 
-    private class Item {
+    private class Item implements Component {
         int content;
+        Box container;
 
         Item(int content) {
             content = this.content;
+        }
+        Item(int content, Box container){
+            this.content = content;
+            this.container = container;
+            this.moveTo(this.container);
         }
 
         int getContent() {
@@ -66,6 +44,10 @@ public class MockingExamplesTest {
 
         void setContent(int content) {
             this.content = content;
+        }
+
+        Box getContainer(){
+            return container;
         }
 
         @Override
@@ -82,27 +64,27 @@ public class MockingExamplesTest {
         public int hashCode() {
             return content;
         }
+
+        @Override
+        public void moveTo(Box destination) {
+
+        }
+
     }
 
-    private class Box {
-        List<Item> items;
-        int totalSize;
-        Box(){
-            items = new ArrayList<>();
+    private class Box implements Component {
+        List<Component> components;
+
+        Box() {
+            components = new ArrayList<>();
         }
-        void insertItem(Item item){
-            items.add(item);
-            totalSize++;
+
+        int getSize() {
+            return components.size();
         }
-        void removeItem(Item item){
-            items.remove(item);
-            totalSize--;
-        }
-        int getTotalSize(){
-            return totalSize;
-        }
-        Enumeration<Item> getItems(){
-            return java.util.Collections.enumeration(items);
+
+        Enumeration<Component> getComponent() {
+            return java.util.Collections.enumeration(components);
         }
 
         @Override
@@ -112,22 +94,20 @@ public class MockingExamplesTest {
 
             Box box = (Box) o;
 
-            if (totalSize != box.totalSize) return false;
-            return items != null ? items.equals(box.items) : box.items == null;
+            return components != null ? components.equals(box.components) : box.components == null;
         }
 
         @Override
         public int hashCode() {
-            int result = items != null ? items.hashCode() : 0;
-            result = 31 * result + totalSize;
+            int result = components != null ? components.hashCode() : 0;
             return result;
         }
-    }
 
-    @Test
-    public void test() {
-        Buffer example = Mockito.mock(Buffer.class);
+        @Override
+        public void moveTo(Box destination) {
 
-        assertNotNull(example);
+        }
+
     }
+    
 }
