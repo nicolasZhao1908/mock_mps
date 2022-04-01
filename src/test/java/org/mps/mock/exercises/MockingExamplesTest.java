@@ -21,7 +21,7 @@ public class MockingExamplesTest {
 
     private interface Component {
         void moveTo(Box destination);
-        int getContent();
+        int getContent(Box box);
     }
 
     private class Item implements Component {
@@ -66,8 +66,8 @@ public class MockingExamplesTest {
         }
 
         @Override
-        public int getContent() {
-            return 0;
+        public int getContent(Box box) {
+            return content;
         }
 
     }
@@ -109,7 +109,7 @@ public class MockingExamplesTest {
         }
 
         @Override
-        public int getContent() {
+        public int getContent(Box box) {
             return 0;
         }
 
@@ -143,9 +143,12 @@ public class MockingExamplesTest {
     }
 
     @Test
-    public void fakeExample(){
+    public void fakeAndDummyExample(){
         ComponentFake componentFake = new ComponentFake();
-        assertEquals(5,componentFake.getContent());
+
+        // since the box passed as a parameter is irrelevant for the operation getContent(Box)
+        Box box = Mockito.mock(Box.class);
+        assertEquals(5,componentFake.getContent(box));
     }
 
     private class ComponentFake implements Component{
@@ -156,10 +159,8 @@ public class MockingExamplesTest {
         }
 
         @Override
-        public int getContent() {
+        public int getContent(Box box) {
             return 5;
         }
     }
-
-    
 }
