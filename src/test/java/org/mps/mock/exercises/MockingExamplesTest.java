@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -23,6 +21,7 @@ public class MockingExamplesTest {
 
     private interface Component {
         void moveTo(Box destination);
+        int getContent();
     }
 
     private class Item implements Component {
@@ -36,10 +35,6 @@ public class MockingExamplesTest {
             this.content = content;
             this.container = container;
             this.moveTo(this.container);
-        }
-
-        int getContent() {
-            return content;
         }
 
         void setContent(int content) {
@@ -68,6 +63,11 @@ public class MockingExamplesTest {
         @Override
         public void moveTo(Box destination) {
 
+        }
+
+        @Override
+        public int getContent() {
+            return 0;
         }
 
     }
@@ -108,6 +108,11 @@ public class MockingExamplesTest {
 
         }
 
+        @Override
+        public int getContent() {
+            return 0;
+        }
+
     }
 
     @Test
@@ -137,4 +142,24 @@ public class MockingExamplesTest {
         assertEquals(1, boxSpy.getSize());
     }
 
+    @Test
+    public void fakeExample(){
+        ComponentFake componentFake = new ComponentFake();
+        assertEquals(5,componentFake.getContent());
+    }
+
+    private class ComponentFake implements Component{
+
+        @Override
+        public void moveTo(Box destination) {
+            System.out.println("Moved to destination");
+        }
+
+        @Override
+        public int getContent() {
+            return 5;
+        }
+    }
+
+    
 }
