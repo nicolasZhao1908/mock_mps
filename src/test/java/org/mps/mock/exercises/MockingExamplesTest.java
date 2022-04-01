@@ -109,6 +109,32 @@ public class MockingExamplesTest {
         }
 
     }
-    
+
+    @Test
+    public void mockingExample() {
+        Box box = Mockito.mock(Box.class);
+        Item item = new Item(1,box);
+
+        assertEquals(box,item.getContainer());
+    }
+
+    @Test
+    public void stubbingExample() {
+        Component component = Mockito.mock(Component.class);
+        Box box = Mockito.mock(Box.class);
+        component.moveTo(box);
+        Mockito.when(box.getSize()).thenReturn(1);
+
+        assertEquals(1,box.getSize());
+    }
+
+    @Test
+    public void spyExample(){
+        Box box = new Box();
+        Box boxSpy = Mockito.spy(box);
+        Mockito.when(boxSpy.getSize()).thenReturn(1);
+
+        assertEquals(1, boxSpy.getSize());
+    }
 
 }
